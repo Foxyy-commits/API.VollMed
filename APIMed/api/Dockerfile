@@ -1,4 +1,4 @@
-# Use uma imagem base do JDK 17 (ou a versão apropriada para sua aplicação)
+# Use a imagem base do JDK 17
 FROM openjdk:17-jdk-slim
 
 # Define o diretório de trabalho no container
@@ -7,11 +7,11 @@ WORKDIR /app
 # Copia o arquivo JAR gerado pela aplicação para o container
 COPY target/sua-aplicacao.jar app.jar
 
-# Expõe a porta da aplicação Spring Boot
+# Expõe a porta usada pela aplicação
 EXPOSE 8080
 
-# Define a variável de ambiente para o nome do banco de dados, usuário e senha
-ENV SPRING_DATASOURCE_URL=jdbc:mysql://mysql-container23:3306/bancoVoll
+# Define as variáveis de ambiente do Spring Boot
+ENV SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/bancoVoll
 ENV SPRING_DATASOURCE_USERNAME=admin
 ENV SPRING_DATASOURCE_PASSWORD=admin
 

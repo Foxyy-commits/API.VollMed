@@ -1,34 +1,29 @@
 version: '3.8'
+
 services:
   mysql:
-    image: mysql:latest
-    container_name: mysql-container23
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: admin
-      MYSQL_DATABASE: bancoVoll
-      MYSQL_USER: admin
-      MYSQL_PASSWORD: admin
+    image: mysql:8.0.22
+    container_name: mysql-container
     ports:
       - "3306:3306"
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
   app:
-    image: minha-aplicacao-springboot
-    container_name: springboot-app
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: .  # Diretório do Dockerfile da aplicação
+    container_name: app-container
     ports:
       - "8080:8080"
+    depends_on:
+      - mysql
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/bancoVoll
       SPRING_DATASOURCE_USERNAME: admin
       SPRING_DATASOURCE_PASSWORD: admin
-    depends_on:
-      mysql:
-        condition: service_healthy
+
+volumes:
+  mysql_data:
